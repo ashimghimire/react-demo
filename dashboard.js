@@ -1,23 +1,29 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import {Redirect} from 'react-router-dom';
+import { Auth }  from '../components/ProtectedRoute';
+
 export default class Dashboard extends Component {
   
   constructor (props) {
-  	super(props);
-  	this.state = {
-  		data:[]
-  	}
-  }
+    super(props);
+    	this.state = {
+    		data:[]
+    	};
+    };
 
-  ComponentDidMount(){
-  	axios.get("localhost:3000/issues").then(function(data){
-  		this.setState({data});
+  componentDidMount() { 
+    self=this;
+  	axios.get("http://localhost:3000/api/issue").then(function(data){
+  		self.setState({data:data.data});
   	});
   }
 
   render() {
     return (
-      <div> <table>
+      <div>
+        <button className="btn btn-primary">Add Issue</button> 
+        <table className="table">
       	<thead>
       	<th>Title</th>
       	<th>Status</th>
@@ -25,9 +31,13 @@ export default class Dashboard extends Component {
       	<th>Created on</th>
       	<th>Action</th>
       	</thead>
-      	<tbody>
-      	</tbody>
-      </table> </div>
+        	<tbody>
+          {this.state.data.map(function(value,index){
+            return (<tr><td>{value.title}</td><td>{value.status}</td><td>{value.createdBy}</td><td>{value.createdOn}</td><td>Edit Delete</td></tr>)
+          })}
+        	</tbody>
+      </table> 
+      </div>
     );
   }
 }
